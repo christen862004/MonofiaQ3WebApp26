@@ -1,0 +1,38 @@
+﻿
+<h1>Hello From Your First View</h1>
+<style>
+h1{
+    background-color:yellow;
+    color:red;
+    margin:20px;
+}
+</style>
+
+<script>
+    console.log("hiiii");
+</script>
+<!--Razor Syntax :razor engin-->
+<!--Block of Code C# -->
+@{
+    int x=10;//C#
+    int y = x+10;
+    <h3>Hii From C# Block</h3>
+}
+<!--inline Statment print value-->
+result=<h4>@(x + y)</h4>
+<!--conition statmne if ,if else ,switch c# varaible-->
+@if (x > y)
+{
+    <h3>x greater than y</h3>
+}
+else
+{
+    <h3>x =@x Less  than y=@y</h3>
+}
+<!--Looping Statmen for ,while ,o wuhile ,foreach-->
+<ul>
+    @for(int i = 0; i < 10; i++)
+    {
+        <li>@i</li>
+    }
+</ul>
