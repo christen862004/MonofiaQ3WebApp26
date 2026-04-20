@@ -1,0 +1,44 @@
+﻿@model Employee
+@{
+    ViewData["Title"] = "Details";//set ????????????
+}
+
+<h1>Details</h1>
+<h2 style="color:@ViewData["Color"]">@Model.Name</h2>
+<h2 style="color:@ViewBag.Color">@Model.Name</h2>
+<hr />
+@ViewData["Val"]
+@ViewBag.Val
+<hr />
+<h4>@ViewData["Msg"]</h4>
+<h4>@ViewBag.Msg</h4>
+
+<hr />
+
+<h4>@(int.Parse(ViewData["Temp"].ToString())-5)</h4>
+<h4>@(ViewBag.Temp-5)</h4>
+
+<hr />
+<select class="form form-control">
+    @foreach (var item in (List<string>)ViewData["DeptList"])
+    {
+        <option>@item</option>
+    }
+</select>
+<select class="form form-control">
+    @foreach (var item in ViewBag.DeptList)
+    {
+        <option>@item</option>
+    }
+</select>
+
+
+<!--
+Viwdata Disadvantage
+1) magic sring
+2- no autocomplemt
+3- explicit cast
+ViewBag Disadvantage
+1)magic string
+2)Excepiton runtime
+-->
