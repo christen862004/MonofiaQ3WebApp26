@@ -13,5 +13,28 @@ namespace MonofiaQ3WebApp26.Controllers
             return View("Index",deptList);
             //View :Views/Department/Index.cshtml ,Model =>List<department>
         }
+        #region New
+        public IActionResult New()
+        {
+            return View("New");//New Model=null
+        }
+        //Req Get - url:/Department/SaveNew?Name=&ManagerName=
+
+        //Action can handel any req get or post
+        [HttpPost]
+        public IActionResult SaveNew(Department deptFromReq)//string name,string ManagerName)
+        {
+           // if(Request.Method=="POST")
+            if (deptFromReq.Name != null) { 
+                context.Department.Add(deptFromReq);
+                context.SaveChanges();
+                
+                //create objkrect controll call action
+                //return RedirectToAction("Index");
+                return RedirectToAction(actionName:"Index",controllerName:"Department");
+            }
+            return View("New",deptFromReq);//new Miodel =Department
+        }
+        #endregion
     }
 }
