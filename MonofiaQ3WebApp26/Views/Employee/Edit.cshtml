@@ -5,11 +5,22 @@
 
 <h1>Edit</h1>
 <!--/Employee/SaveEdit/1 ?EmpName=&NetSalary=&ImageUrl=&DepartmentId=-->
-<form method="post" action="/Employee/SaveEdit/@Model.Id">
+@* <form method="post" action="/Employee/SaveEdit/@Model.Id"> *@
+<form method="post" asp-action="SaveEdit" asp-route-id="@Model.Id" asp-controller="Employee">
+    @* @Html.AntiForgeryToken() *@
     @* <input type="hidden" name="id" value="@Model.Id" /> *@
     <div>
-        <label>Name</label>
-        <input class="form form-control" type="text" value="@Model.EmpName" name="EmpName" id="Name" />
+
+        <label asp-for="EmpName"></label>
+        <input class="form form-control" asp-for="EmpName"/>
+        @* <label>Name</label>
+        <input class="form form-control" type="text" value="@Model.EmpName" name="EmpName" id="Name" /> *@
+        <!--Html Helper lossly-->
+        @* @Html.TextBox("Name") *@
+        @* @Html.TextBoxFor(expression: e => e.EmpName, htmlAttributes: new { style = "color:red",@class="form form-control"}) *@
+
+      @*   @Html.LabelFor(e=>e.EmpName)
+        @Html.EditorFor(e=>e.EmpName) *@
     </div>
     <div>
         <label>Salary</label>
@@ -40,5 +51,12 @@
     </div>
     <input type="submit" value="Save" class="btn btn-primary" />
 </form>
+<hr />
+|<a href="/employee/index">Back To List</a> - 
+|@Html.ActionLink(linkText:"Back To List",actionName:"index",controllerName:"Employee",routeValues:null,htmlAttributes:new{@class="btn btn-success"})
 
-|<a href="/employee/index">Back To List</a>
+|<a asp-action="Index" asp-controller="Employee">Back To List</a>
+<hr />
+<a href="/Employee/Details/@Model.Id?name=@Model.EmpName">Details</a> - 
+@Html.ActionLink("- Details -","Details","Employee",routeValues:new{id=Model.Id,name=Model.EmpName}) - 
+<a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Id" asp-route-name="@Model.EmpName">Details</a> -

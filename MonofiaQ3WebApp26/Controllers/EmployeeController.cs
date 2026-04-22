@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MonofiaQ3WebApp26.Models;
 //using MonofiaQ3WebApp26.ViewModels;
 
@@ -16,6 +17,27 @@ namespace MonofiaQ3WebApp26.Controllers
             //pagination
             return View("Index", context.Employees.ToList());
         }
+        #region New
+        //Employee/NEw
+        public IActionResult New()
+        {
+            ViewBag.DeptList = context.Department.ToList();
+            return View("New");
+        }
+        [HttpPost] //restrict hanel post request only
+        [ValidateAntiForgeryToken]//REQUEST["__requestVer"]
+        public IActionResult SaveNEw(Employee empFromReq) {
+            if(empFromReq.Name!=null && empFromReq.Salary > 10000)
+            {
+                context.Employees.Add(empFromReq);
+                context.SaveChanges();
+                return RedirectToAction("Index", "Employee");
+            }
+           // IEnumerable<SelectListItem> items = context.Department.ToList();
+            ViewBag.DeptList = context.Department.ToList();
+            return View("New", empFromReq);
+        }
+        #endregion
 
         #region Edit
         //open view "handel link
@@ -44,6 +66,7 @@ namespace MonofiaQ3WebApp26.Controllers
         //handel submit 
         //Employee/SaveEdit/1 ?Name=&Salary=&ImageUrl=&DepartmentId=
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult SaveEdit(EmpWithDEptListViewModel EmpFromReq)//1)Create obj ,take porty ==>bind
         {
             if(EmpFromReq.EmpName != null &&EmpFromReq.NetSalary>8000) {
@@ -63,12 +86,11 @@ namespace MonofiaQ3WebApp26.Controllers
             return View("Edit",EmpFromReq);
         }
         #endregion
-        #region Deatils
 
-        
+        #region Deatils
         //Employee/Details/1
         //Employee/Details?id=1
-        public IActionResult Details(int id)
+        public IActionResult Details(int id ,string name)
         {
             //logic
             string msg = "Hello";
