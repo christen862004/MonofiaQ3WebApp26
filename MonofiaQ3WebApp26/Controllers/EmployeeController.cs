@@ -17,6 +17,15 @@ namespace MonofiaQ3WebApp26.Controllers
             //pagination
             return View("Index", context.Employees.ToList());
         }
+
+        public IActionResult CheckSalary(int Salary,string DepartmentId)
+        {
+            if (Salary > 8000)
+            {
+                return Json(true);
+            }
+            return Json("Salary Must be Greater than 8000");//conside false "message rror"
+        }
         #region New
         //Employee/NEw
         public IActionResult New()
@@ -27,11 +36,18 @@ namespace MonofiaQ3WebApp26.Controllers
         [HttpPost] //restrict hanel post request only
         [ValidateAntiForgeryToken]//REQUEST["__requestVer"]
         public IActionResult SaveNEw(Employee empFromReq) {
-            if(empFromReq.Name!=null && empFromReq.Salary > 10000)
+            if(ModelState.IsValid==true)
             {
-                context.Employees.Add(empFromReq);
-                context.SaveChanges();
-                return RedirectToAction("Index", "Employee");
+                try
+                {
+                    context.Employees.Add(empFromReq);
+                    context.SaveChanges();
+                    return RedirectToAction("Index", "Employee");
+                }catch(Exception ex)
+                {
+                    //ModelState.AddModelError("DepartmentId", "Please Select Department");
+                    ModelState.AddModelError("ex",ex.InnerException.Message);
+                }
             }
            // IEnumerable<SelectListItem> items = context.Department.ToList();
             ViewBag.DeptList = context.Department.ToList();
