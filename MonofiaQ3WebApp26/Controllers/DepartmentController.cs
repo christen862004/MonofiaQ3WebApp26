@@ -1,15 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MonofiaQ3WebApp26.Models;
+using MonofiaQ3WebApp26.Repository;
 
 namespace MonofiaQ3WebApp26.Controllers
 {
     public class DepartmentController : Controller
     {
-        ITIContext context = new ITIContext();
+        //ITIContext context = new ITIContext();
+        IDepartmentRepository deptRepository;
+        public DepartmentController()
+        {
+            deptRepository = new DepartmentRepository();
+        }
         public IActionResult Index()
         {
-            List<Department> deptList =context.Department.ToList();
+            List<Department> deptList =deptRepository.GetAll();
             return View("Index",deptList);
             //View :Views/Department/Index.cshtml ,Model =>List<department>
         }
@@ -26,8 +32,8 @@ namespace MonofiaQ3WebApp26.Controllers
         {
            // if(Request.Method=="POST")
             if (deptFromReq.Name != null) { 
-                context.Department.Add(deptFromReq);
-                context.SaveChanges();
+                deptRepository.Add(deptFromReq);
+                deptRepository.Save();
                 
                 //create objkrect controll call action
                 //return RedirectToAction("Index");

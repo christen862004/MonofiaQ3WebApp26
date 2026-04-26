@@ -1,21 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MonofiaQ3WebApp26.Models;
+using MonofiaQ3WebApp26.Repository;
 //using MonofiaQ3WebApp26.ViewModels;
 
 namespace MonofiaQ3WebApp26.Controllers
 {
     public class EmployeeController : Controller
     {
-        ITIContext context = new ITIContext();
-        public EmployeeController()
+        
+        IEmployeeRepository EmpRepository=null;
+        IDepartmentRepository DeptRepository;
+        public EmployeeController(IEmployeeRepository empRepo,IDepartmentRepository deptRepo)//lossly couple
         {
-            
-        }
+            EmpRepository = empRepo;//di ,dip,ioc
+            DeptRepository = deptRepo;
+        }//Employee/Index
         public IActionResult Index()
         {
             //pagination
-            return View("Index", context.Employees.ToList());
+            return View("Index",EmpRepository.GetAll());
         }
 
         public IActionResult CheckSalary(int Salary,string DepartmentId)
@@ -30,7 +34,7 @@ namespace MonofiaQ3WebApp26.Controllers
         //Employee/NEw
         public IActionResult New()
         {
-            ViewBag.DeptList = context.Department.ToList();
+            ViewBag.DeptList = DeptRepository.GetAll();
             return View("New");
         }
         [HttpPost] //restrict hanel post request only
@@ -40,8 +44,8 @@ namespace MonofiaQ3WebApp26.Controllers
             {
                 try
                 {
-                    context.Employees.Add(empFromReq);
-                    context.SaveChanges();
+                    EmpRepository.Add(empFromReq);
+                    EmpRepository.Save();
                     return RedirectToAction("Index", "Employee");
                 }catch(Exception ex)
                 {
@@ -50,7 +54,7 @@ namespace MonofiaQ3WebApp26.Controllers
                 }
             }
            // IEnumerable<SelectListItem> items = context.Department.ToList();
-            ViewBag.DeptList = context.Department.ToList();
+            ViewBag.DeptList = DeptRepository.GetAll();
             return View("New", empFromReq);
         }
         #endregion
@@ -60,8 +64,8 @@ namespace MonofiaQ3WebApp26.Controllers
         public IActionResult Edit(int id)
         {
             //collect
-            Employee empFromDb= context.Employees.FirstOrDefault(e => e.Id == id);
-            List<Department> departmentList= context.Department.ToList();
+            Employee empFromDb= EmpRepository.GetById(id);
+            List<Department> departmentList= DeptRepository.GetAll();
             if(empFromDb != null)
             {
                 //declare &map
@@ -86,19 +90,23 @@ namespace MonofiaQ3WebApp26.Controllers
         public IActionResult SaveEdit(EmpWithDEptListViewModel EmpFromReq)//1)Create obj ,take porty ==>bind
         {
             if(EmpFromReq.EmpName != null &&EmpFromReq.NetSalary>8000) {
-                //get old object
-                Employee empFromDb= context.Employees.FirstOrDefault(e => e.Id == EmpFromReq.Id);
-                //change value
+                //mapping from vm to model
+                Employee empFromDb = new Employee();
+                empFromDb.Id= EmpFromReq.Id;
+                
                 empFromDb.Name= EmpFromReq.EmpName;
                 empFromDb.Salary= EmpFromReq.NetSalary;
                 empFromDb.ImageUrl= EmpFromReq.ImageUrl;
                 empFromDb.DepartmentId= EmpFromReq.DepartmentId;
+
+                EmpRepository.Update(empFromDb);
+
                 //save
-                context.SaveChanges();
+                EmpRepository.Save();
                 //index
                 return RedirectToAction("Index", "Employee");
             }
-            EmpFromReq.DeptList = context.Department.ToList();
+            EmpFromReq.DeptList = DeptRepository.GetAll();
             return View("Edit",EmpFromReq);
         }
         #endregion
@@ -111,7 +119,7 @@ namespace MonofiaQ3WebApp26.Controllers
             //logic
             string msg = "Hello";
             int temp = 30;
-            List<string> DeptList=context.Department.Select(x => x.Name).ToList();
+            List<string> DeptList = DeptRepository.GetAll().Select(d => d.Name).ToList() ;// context.Department.Select(x => x.Name).ToList();
             //fill or set data ViewData C#
             ViewData["Msg"] = msg;
             ViewData["Temp"] = temp;
@@ -123,7 +131,7 @@ namespace MonofiaQ3WebApp26.Controllers
             ViewBag.Val = 10;
 
 
-            Employee EmpModel = context.Employees.FirstOrDefault(e => e.Id == id);
+            Employee EmpModel = EmpRepository.GetById(id);
             return View("Details",EmpModel);
         }
         public IActionResult DetailsVM(int id)
@@ -131,8 +139,8 @@ namespace MonofiaQ3WebApp26.Controllers
             //1) collect data
             string msg = "Hello";
             int temp = 30;
-            Employee EmpModel = context.Employees.FirstOrDefault(e => e.Id == id);
-            List<string> DeptList = context.Department.Select(x => x.Name).ToList();
+            Employee EmpModel = EmpRepository.GetById(id);
+            List<string> DeptList = DeptRepository.GetAll().Select(x => x.Name).ToList();
             //2) declare ViewModel Object //3) Map
             EmpNAmeWithDeptListTempMsgColorViewModel empVM = new() { 
                 EmpName=EmpModel.Name,
