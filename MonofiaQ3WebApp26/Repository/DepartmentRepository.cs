@@ -4,9 +4,10 @@ namespace MonofiaQ3WebApp26.Repository
     public class DepartmentRepository : IDepartmentRepository
     {
         ITIContext context;
-        public DepartmentRepository()
+        public DepartmentRepository(ITIContext context)
         {
-                context = new ITIContext();
+            this.context = context;
+                ;// new ITIContext();
         }
         //CRUD
 

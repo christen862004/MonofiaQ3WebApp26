@@ -4,9 +4,9 @@ namespace MonofiaQ3WebApp26.Repository
     public class EmployeeRepository : IEmployeeRepository
     {
         ITIContext context;
-        public EmployeeRepository()
+        public EmployeeRepository(ITIContext context)
         {
-            context = new ITIContext();
+            this.context = context;// new ITIContext();
         }
         //CRUD :Create - Get -Update - Delete
         public void Add(Employee obj)

@@ -9,9 +9,9 @@ namespace MonofiaQ3WebApp26.Controllers
     {
         //ITIContext context = new ITIContext();
         IDepartmentRepository deptRepository;
-        public DepartmentController()
+        public DepartmentController(IDepartmentRepository deptRepo)
         {
-            deptRepository = new DepartmentRepository();
+            deptRepository = deptRepo;// new DepartmentRepository();
         }
         public IActionResult Index()
         {
