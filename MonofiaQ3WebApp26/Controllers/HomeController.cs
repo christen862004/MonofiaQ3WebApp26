@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MonofiaQ3WebApp26.Models;
 using System.Diagnostics;
@@ -7,6 +8,7 @@ namespace MonofiaQ3WebApp26.Controllers
     //Class to be controller an call in url
     //1) class en with Controller
     //2) Classs inherit built in class Contoller
+    
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -21,6 +23,7 @@ namespace MonofiaQ3WebApp26.Controllers
         //2) Cant be Static
         //3) Cant be overload (only in one case)
         //endpoint:/Home/ShowMsg
+        
         public ContentResult ShowMsg()
         {
             //logic
@@ -98,7 +101,6 @@ namespace MonofiaQ3WebApp26.Controllers
         {
             return View();
         }
-
         public IActionResult Privacy()
         {
             return View();

@@ -1,5 +1,6 @@
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using MonofiaQ3WebApp26.Filtters;
 using MonofiaQ3WebApp26.Repository;
 
 namespace MonofiaQ3WebApp26
@@ -13,6 +14,10 @@ namespace MonofiaQ3WebApp26
             // Add services to the container. ay7
             //1) built in service (interface,class) already register
             //2) built in service (interface,class) need to register
+            //builder.Services.AddControllersWithViews(options =>
+            //{
+            //    options.Filters.Add(new HandelErrorAttribute());//global filter
+            //});
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ITIContext>(optionsBuilder => {
                 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
@@ -62,12 +67,25 @@ namespace MonofiaQ3WebApp26
             }
             app.UseStaticFiles();//by default search in wwwroot
 
-            app.UseRouting();
+            app.UseRouting();//security (mapping)
            
             app.UseSession();//rea an wriet session ,create user session,inject some service
             
             app.UseAuthorization();
+            #region Custom route , route constrint using Naming Convention Route
+            //route fro each controller "action placeholer"
+            //app.MapControllerRoute(name:"route1"
+            //    ,pattern: "{controller=Employee}/{action=index}/{id?}");
 
+
+            //route for each action
+            //app.MapControllerRoute(name: "route1", pattern: "r1/{age:int:range(20,60)}/{name?}",
+            //    defaults: new { controller = "Route", action = "Method1" });
+
+            //app.MapControllerRoute(name: "route2", pattern: "r2",
+            //   defaults: new { controller = "Route", action = "Method2" });
+            #endregion
+            //staff decalre,execute
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
