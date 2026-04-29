@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using System.Security.Claims;
 
 namespace MonofiaQ3WebApp26.Controllers
 {
@@ -32,7 +34,7 @@ namespace MonofiaQ3WebApp26.Controllers
                     Address=userFromReq.Address
                 };
                 //create user on db
-                IdentityResult result=await userManager.CreateAsync(user);
+                IdentityResult result=await userManager.CreateAsync(user,userFromReq.Password);
                 if(result.Succeeded)
                 {
                     //create cookie
@@ -47,6 +49,49 @@ namespace MonofiaQ3WebApp26.Controllers
             }
             //return toi register view
             return View("Register",userFromReq);
+        }
+        #endregion
+
+        #region Login
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View("Login");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]//
+        public async Task<IActionResult> Login(LoginUserViewModel userFromReq)
+        {
+            if (ModelState.IsValid)
+            {
+                //check valid
+                AppliactionUser appUser=await userManager.FindByNameAsync(userFromReq.UserName);
+                if (appUser != null)
+                {
+                    //check password
+                    bool found=await userManager.CheckPasswordAsync(appUser, userFromReq.Password);
+                    if (found)
+                    {
+                        //create cookie
+                        List<Claim> extraClaims = new List<Claim>();
+                        extraClaims.Add(new Claim("Address", appUser.Address));
+                        await signInManager.SignInWithClaimsAsync(appUser, userFromReq.RmemeberMe,extraClaims);
+                        return RedirectToAction("Index", "Employee");
+                    }
+                }
+                ModelState.AddModelError("", "Invaliad Account");
+                //create cookie
+            }
+            return View("Login", userFromReq);
+
+        }
+        #endregion
+
+        #region LogOut
+        public async Task<IActionResult> SignOut()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Login");
         }
         #endregion
     }

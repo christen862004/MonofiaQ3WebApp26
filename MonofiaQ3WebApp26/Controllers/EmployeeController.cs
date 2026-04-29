@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MonofiaQ3WebApp26.Models;
 using MonofiaQ3WebApp26.Repository;
@@ -16,6 +17,7 @@ namespace MonofiaQ3WebApp26.Controllers
             EmpRepository = empRepo;//di ,dip,ioc
             DeptRepository = deptRepo;
         }//Employee/Index
+        [Authorize]
         public IActionResult Index()
         {
             //pagination

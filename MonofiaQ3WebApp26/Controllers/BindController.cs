@@ -1,9 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace MonofiaQ3WebApp26.Controllers
 {
     public class BindController : Controller
     {
+        public IActionResult Welcome()
+        {
+            //auth Welcome NAme
+            if (User.Identity.IsAuthenticated)
+            {
+                string name=User.Identity.Name;
+                Claim IdClaim= User.Claims.FirstOrDefault(c=>c.Type==ClaimTypes.NameIdentifier);
+                string id = IdClaim.Value;
+
+                Claim addClaim = User.Claims.FirstOrDefault(c => c.Type == "Address");
+                return Content($"Welcome {name} \n {id} \n {addClaim.Value}");
+            }
+            //not auth Welcome Gust
+            return Content("Welcom Gust");
+        }
+
         //Bind/m1
         //[HttpGet]
         //public IActionResult M1()

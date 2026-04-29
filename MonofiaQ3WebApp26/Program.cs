@@ -23,8 +23,11 @@ namespace MonofiaQ3WebApp26
             builder.Services.AddDbContext<ITIContext>(optionsBuilder => {
                 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
             });//registe ITIContext,dbcontextOption 
-            builder.Services.AddIdentity<AppliactionUser, IdentityRole>()
-                .AddEntityFrameworkStores<ITIContext>();
+            builder.Services.AddIdentity<AppliactionUser, IdentityRole>(options => {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 4;
+            }).AddEntityFrameworkStores<ITIContext>();
 
             builder.Services.AddSession(conf =>
             {
