@@ -37,6 +37,13 @@ namespace MonofiaQ3WebApp26.Controllers
                 IdentityResult result=await userManager.CreateAsync(user,userFromReq.Password);
                 if(result.Succeeded)
                 {
+                    //add Claim to specific user 
+                    //await userManager.AddClaimAsync(user, new Claim("kk","val"));
+
+
+
+                    //assign user  To Role 
+                   IdentityResult roleResut= await  userManager.AddToRoleAsync(user, "Admin"); 
                     //create cookie
                     //create cookie - user id ,username,email? ,role?
                     await signInManager.SignInAsync(user, isPersistent: false);

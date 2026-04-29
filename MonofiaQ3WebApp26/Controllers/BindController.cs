@@ -10,6 +10,7 @@ namespace MonofiaQ3WebApp26.Controllers
             //auth Welcome NAme
             if (User.Identity.IsAuthenticated)
             {
+                //User.IsInRole("Admin");
                 string name=User.Identity.Name;
                 Claim IdClaim= User.Claims.FirstOrDefault(c=>c.Type==ClaimTypes.NameIdentifier);
                 string id = IdClaim.Value;
