@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MonofiaQ3WebApp26.Models;
 using System.Diagnostics;
@@ -26,6 +27,7 @@ namespace MonofiaQ3WebApp26.Controllers
         
         public ContentResult ShowMsg()
         {
+          
             //logic
             //dEcalre
             ContentResult result = new ContentResult();

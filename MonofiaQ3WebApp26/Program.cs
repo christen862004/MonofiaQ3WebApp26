@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using MonofiaQ3WebApp26.Filtters;
@@ -22,6 +23,8 @@ namespace MonofiaQ3WebApp26
             builder.Services.AddDbContext<ITIContext>(optionsBuilder => {
                 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
             });//registe ITIContext,dbcontextOption 
+            builder.Services.AddIdentity<AppliactionUser, IdentityRole>()
+                .AddEntityFrameworkStores<ITIContext>();
 
             builder.Services.AddSession(conf =>
             {
